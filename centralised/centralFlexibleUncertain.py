@@ -12,10 +12,10 @@ MDemLimit = 1.2042811301817
 aTransParam = 49.1297731108936
 bsharpParam = 0.20118446680713
 
-annVol = 0.15
-volyr0 = 0.5
-volM = 0.5
-volb = 0.7
+annVol = 0.15 #0.15
+volyr0 = 0.5 #0.5
+volM = 0.5 #0.5
+volb = 0.7 #0.7
 scaleFactor = 1468000
 BlueH2MarketShare = 0.4
 SFMarketShare = 0.18
@@ -41,7 +41,7 @@ workingHours = 8322
 dailyprodrate = 190000;
 yearlyprodrate = dailyprodrate*plantOperationalCap*365/1000; #replace in code
 
-discountrate = 0.06; # Nine percent per annum
+discountrate = 0.1; # 0.1
 th = 25
 statetax = 0.0725;
 fedtax = 0.21;
@@ -534,7 +534,8 @@ def test(help):
         
     return enpv
 
-print(f'ENPV value: {test([47500, 0.5, 0.75])}')
+# print(f'ENPV value: {test([47500, 0.5, 0.75])}')
+print(f'ENPV value: {test([47303.2781, 0.0484, 0.6663])}') #sensitivity analysis 
     
 # print(f"npv of investment is {npv}");
 

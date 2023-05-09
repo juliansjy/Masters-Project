@@ -12,10 +12,10 @@ MDemLimit = 1.2042811301817
 aTransParam = 49.1297731108936
 bsharpParam = 0.20118446680713
 
-annVol = 0.15
-volyr0 = 0.5
-volM = 0.5
-volb = 0.7
+annVol = 0.15 #0.15
+volyr0 = 0.5 #0.5
+volM = 0.5 #0.5
+volb = 0.7 #0.7
 scaleFactor = 1468000
 BlueH2MarketShare = 0.4
 SFMarketShare = 0.18
@@ -45,7 +45,7 @@ endcapreq = 65882.50;
 plantfixedoperationalcosts = 1.09
 plantextensioncost = 0.54
 
-discountrate = 0.1; # Nine percent per annum
+discountrate = 0.15; # 0.1
 th = 25
 statetax = 0.0725;
 fedtax = 0.21;
@@ -688,7 +688,8 @@ def test(help):
     return enpv
 
 # print(test([35, 16473.73, 0.54, 65882.50, 4, 0.1, 0.75, 2.5, 470.68]))
-print(f'ENPV value: {test([470.68, 35, 0.75, 2.5, 0.15])}')
+# print(f'ENPV value: {test([470.68, 35, 0.75, 2.5, 0.15])}')
+print(f'ENPV value: {test([214.8857, 5.3614, 0.004, 4.9803, 0.4071])}') #sensitivity analysis
 
 # for i in range(70):
 #     if test([35, 16473.73, 0.54, 65882.50, 4, 0.1, 0.75, 2.5, 470.68]) < -1000:
