@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 
-
 from cfixed import *
 from cphased import *
 from cflex import *
@@ -13,24 +12,24 @@ b = [-172.6361, -13.2525, 163.5321, -153.2875, -16.3866, 130.0488]          #Val
 c = [1989.2126, 1874.5271, 1968.4829, 1497.0938, 1504.9549, 1549.9349]      #Value at Gain (90%)
 
 #Main CDF curves
-# plt.plot(bounds1, cdf1, label="Centralised Fixed", color="blue")
+plt.plot(bounds1, cdf1, label="Centralised Fixed", color="purple")
 # plt.plot(bounds2, cdf2, label="Centralised Phased", color="red")
 plt.plot(bounds3, cdf3, label="Centralised Flexible", color="blue")
-# plt.plot(bounds4, cdf4, label="Decentralised Fixed", color="green")
+plt.plot(bounds4, cdf4, label="Decentralised Fixed", color="red")
 # plt.plot(bounds5, cdf5, label="Decentralised Phased", color="brown")
 plt.plot(bounds6, cdf6, label="Decentralised Flexible", color="orange")
 #Unoptimised ENPV lines
 # plt.vlines(x = enpv1, ymin=0, ymax=max(cdf1), label="Centralised Fixed ENPV", colors="blue", linestyle="dashed")
 # plt.vlines(x = enpv2, ymin=0, ymax=max(cdf2), label="Centralised Phased ENPV", colors="red", linestyle="dashed")
-plt.vlines(x = enpv3, ymin=0, ymax=max(cdf3), label="Centralised Flexible ENPV", colors="blue", linestyle="dotted")
+# plt.vlines(x = enpv3, ymin=0, ymax=max(cdf3), label="Centralised Flexible ENPV", colors="blue", linestyle="dotted")
 # plt.vlines(x = enpv4, ymin=0, ymax=max(cdf4), label="Decentralised Fixed ENPV", colors="green", linestyle="dashed")
 # plt.vlines(x = enpv5, ymin=0, ymax=max(cdf5), label="Decentralised Phased ENPV", colors="brown", linestyle="dashed")
-plt.vlines(x = enpv6, ymin=0, ymax=max(cdf6), label="Decentralised Flexible ENPV", colors="orange", linestyle="dotted")
+# plt.vlines(x = enpv6, ymin=0, ymax=max(cdf6), label="Decentralised Flexible ENPV", colors="orange", linestyle="dotted")
 #Optimised ENPV lines
-# plt.vlines(x = a[0], ymin=0, ymax=max(cdf1), label="Optimised Centralised Fixed ENPV", colors="blue", linestyle="dotted")
+plt.vlines(x = a[0], ymin=0, ymax=max(cdf1), label="Optimised Centralised Fixed ENPV", colors="purple", linestyle="dashed")
 # plt.vlines(x = a[1], ymin=0, ymax=max(cdf2), label="Optimised Centralised Phased ENPV", colors="red", linestyle="dotted")
 plt.vlines(x = a[2], ymin=0, ymax=max(cdf3), label="Optimised Centralised Flexible ENPV", colors="blue", linestyle="dashed")
-# plt.vlines(x = a[3], ymin=0, ymax=max(cdf4), label="Optimised Decentralised Fixed ENPV", colors="green", linestyle="dotted")
+plt.vlines(x = a[3], ymin=0, ymax=max(cdf4), label="Optimised Decentralised Fixed ENPV", colors="red", linestyle="dashed")
 # plt.vlines(x = a[4], ymin=0, ymax=max(cdf5), label="Optimised Decentralised Phased ENPV", colors="brown", linestyle="dotted")
 plt.vlines(x = a[5], ymin=0, ymax=max(cdf6), label="Optimised Decentralised Flexible ENPV", colors="orange", linestyle="dashed")
 #Value at Risk lines
@@ -50,7 +49,7 @@ plt.vlines(x = a[5], ymin=0, ymax=max(cdf6), label="Optimised Decentralised Flex
 
 plt.ylabel("Cumulative Distribution Function")
 plt.xlabel("NPV")
-plt.title("Improvements in ENPV value from Optimisation")
-# plt.title("Improvements in Value of Flexibility from Optimisation")
+# plt.title("Improvements in ENPV value from Optimisation")
+plt.title("Improvements in Value of Flexibility from Optimisation")
 plt.legend(fontsize="small")
 plt.show()
