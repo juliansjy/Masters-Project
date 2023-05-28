@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 # import numpy as np
 # from multiprocessing import Pool
 
-# from centralised.centralFixed import *
+from centralised.centralFixed import *
 # from centralised.centralPhased import *
 # from centralised.centralFlexible import *
 # from centralised.centralFixedUncertain import *
@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 
 # from decentralised.decentralFixed import * 
 # from decentralised.decentralPhased import *
-from decentralised.decentralFlexible import *
+# from decentralised.decentralFlexible import *
 # from decentralised.decentralFixedUncertain import *
 # from decentralised.decentralPhasedUncertain import *
 # from decentralised.decentralFlexibleUncertain import *
@@ -25,16 +25,16 @@ from decentralised.decentralFlexible import *
 #     y = A*2 + sum([(x**2 - A * np.cos(2 * math.pi * x)) for x in X])
 #     return y
 # def task():
-# bounds = [(100000, 200000)]                                                #centralised Fixed Certain and Uncertain
+bounds = [(100000, 200000)]                                                #centralised Fixed Certain and Uncertain
 # bounds = [(30000, 50000), (0, 1)]                                         #centralised Phased Certain and Uncertain
 # bounds = [(30000, 50000), (0, 1), (0, 1)]                              #centralised Flexible Certain and Uncertain
 
 # bounds = [(100, 600)]                                                #decentralised Fixed Certain and Uncertain
 # bounds = [(100, 600), (0, 50), (0, 1)]                                     #decentralised Phased Certain and Uncertain
-bounds = [(100, 600), (0, 50), (0, 1), (0, 5), (0, 1)]                            #decentralised Flexible Certain and Uncertain
+# bounds = [(100, 600), (0, 50), (0, 1), (0, 5), (0, 1)]                            #decentralised Flexible Certain and Uncertain
 
 
-nv = 5  # number of variables
+nv = 1  # number of variables
 mm = -1  # if minimization problem, mm = -1; if maximization problem, mm = 1
 
 # THE FOLLOWING PARAMETERS ARE OPTIONAL
