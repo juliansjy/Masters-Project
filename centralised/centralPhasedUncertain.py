@@ -1,48 +1,49 @@
-# from centralUncertainConstants import *
 import pandas as pd  
 import numpy as np 
 from statistics import NormalDist
 import random
 import math
 from scipy.stats import norm
-import matplotlib.pyplot as plt;
 
+#Sensitivity parameters
+annVol = 0.15           #Base value 0.15
+volb = 0.7              #Base value 0.7
+discountrate = 0.1;     #Base value 0.1
+
+#General constants
+thou = 1000
+mill = 1000000
+daysyear = 365
+
+#To calculate demand
 demandyr0 = 0.0240232711111154
 MDemLimit = 1.2042811301817
-aTransParam = 49.1297731108936
 bsharpParam = 0.20118446680713
-
-annVol = 0.15 #0.15
 volyr0 = 0.5 #0.5
 volM = 0.5 #0.5
-volb = 0.7 #0.7
 scaleFactor = 1468000
 BlueH2MarketShare = 0.4
 SFMarketShare = 0.18
 
-thou = 1000
-mill = 1000000
-daysyear = 365
+#Constants used in calculations
 cons1 = 8760
 cons2 = 16.92
-plantDesignCap = 190950;
 
+#Operational constants
+plantDesignCap = 190950;
 plantOperationalCap = 0.95;
 CO2emissionRate = 1.06; # Kg of CO2 per Kg of H2
 CO2captureRate = 8.60; # Kg of CO2 per Kg of H2 
 CO2emissionRatefeedstock =  0.28;
-CO2emissionRatefuel = 1.18;
 NatGasConsumption = 33411;
 plantDesignCapBase = 190950;
 plantDesignCapScaled = 190000;
-lifetime = 25
 workingHours = 8322
-
-dailyprodrate = 190000;
-yearlyprodrate = dailyprodrate * plantOperationalCap * 365/1000;
-
-discountrate = 0.1; # 0.1
 th = 25
+initialCapCostsPhased = 230.53
+iniProdRateDay = 47500
+
+#Taxes
 statetax = 0.0725;
 fedtax = 0.21;
 
@@ -61,55 +62,29 @@ CO2low = 10
 CO2high = 30
 CO2ave = 15
 
-capInvestment = 591730751/1000000
-
-basecostFF = 67836966;
-basecostWM = 104434;
-basecostCC = 625712;
-
 #CO2 gas prices constants
 drift = 0.00234
 volatility = 0.19
 CO2captradeprice = 29.15
-initialCapCostsFixed = 591.73
-initialCapCostsPhased = 230.53
+interval = 4
 
-#Other Phased stuff
-iniProdRateDay = 47500
-iniProdRateYear = iniProdRateDay*plantOperationalCap*365/1000
+#To calculate variable OPEX
+basecostFF = 67836966;
+basecostWM = 104434;
+basecostCC = 625712;
 
+#Expansion constants
 dailycapreq = 190000
-endcapreq = dailycapreq*plantOperationalCap*365/1000
-
-expansionIncrement = (iniProdRateDay*plantOperationalCap*365)/1000 #replace in code 16470.63
-expansionTimes = ((dailycapreq*plantOperationalCap*365/1000)-(iniProdRateDay*plantOperationalCap*365/1000))/((iniProdRateDay*plantOperationalCap*365)/1000) #replace in code 3
-expansionThresh = 0.75
-
 reductionDuringExpansion = 0.5
+expansionInvestmentval = 137.12
 
+#Assigning different fixed OPEX depending on available rate
 dict = {
     16470.63: 6.59,
     32941.26: 10.56,
     49411.89: 13.91,
     65882.52: 16.92,
-    #82353.13: 19.69
 }
-
-expansionInvestmentval = 137.12
-
-# dict2 = {
-#     16470.63: 137.12,
-#     32941.26: 137.12,
-#     49411.89: 137.12,
-#     65882.52: 137.12,
-# }
-
-#For plots using matplotlib
-a = 49.1298;
-b = 0.2012;
-demand = 1468000; # raw data demand in 2050 from source. required to calc demandCAL
-
-interval = 4
 
 MACRSfixed = [22,43,40,37,34,31,29,27,26,26,26,26,26,26,26,26,26,26,26,26,13,0,0,0,0]
 MACRSphased = [10,19,18,16,15,19,23,21,20,25,29,28,27,31,35,34,33,32,31,31,24,18,18,18,18]
@@ -123,10 +98,9 @@ ngprices = [130.48,109.52,118.95,225.84,207.50,177.11,286.63,308.64,455.36,352.6
 elecprices = [7.27,6.67,6.81,6.92,6.88,6.76,6.91,7.10,6.89,6.67,6.82,6.77,6.83,6.96,6.39,6.16,5.73,5.25,5.11,4.88,5.05,4.64,4.43,4.48,4.53]
 expansionChange = [0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
-def test(help):
-    iniProdRateDay = help[0]
-    # expansionIncrement = help[1]
-    reductionDuringExpansion = help[1]
+def main(designVariables):
+    iniProdRateDay = designVariables[0]
+    reductionDuringExpansion = designVariables[1]
     def npv():
         availableRate = pd.Series(index=nums, dtype='float64')
         finalprodrate = pd.Series(index=nums, dtype='float64')
@@ -139,7 +113,6 @@ def test(help):
         OpCost = pd.Series(index=nums, dtype='float64')
         Depreciation = pd.Series(index=nums, dtype='float64')
         expansionInvestment = pd.Series(index=nums, dtype='float64')
-        # expansionInvestment2 = pd.Series(index=nums, dtype='float64')
         demandprojection = pd.Series(index=nomyear2, dtype='float64').array
         normDemProjGrowth = pd.Series(index=nums, dtype='float64')
         randomDraw = pd.Series(index=nums, dtype='float64')
@@ -154,6 +127,65 @@ def test(help):
         npv1 = 0
         npv = 0
 
+        #Start of calculations
+        #Uncertainty in NPV parameters
+
+        #Calculating Hydrogen price
+        lowModeHighMode = (Hpriceave-Hpricelow)/(Hpricehigh-Hpricelow)
+        randomDraw2 = random.uniform(0, 1)
+        def findHprice():
+            if randomDraw2 < lowModeHighMode:
+                Hprice = Hpricelow+math.sqrt((Hpriceave-Hpricelow)*(Hpricehigh-Hpricelow)*randomDraw2)
+            else:
+                Hprice = Hpricehigh-math.sqrt((Hpricehigh-Hpricelow)*(Hpricehigh-Hpriceave)*(1-randomDraw2))
+            return Hprice 
+
+        #Calculating Hydrogen delivery price
+        lowModeHighMode2 = (H2dpave-H2dplow)/(H2dohigh-H2dpave)
+        def findH2deliveryprice():
+            if randomDraw2 < lowModeHighMode2:
+                H2dprice = H2dplow+math.sqrt((H2dpave-H2dplow)*(H2dohigh-H2dplow)*randomDraw2)
+            else: 
+                H2dprice = H2dohigh-math.sqrt((H2dohigh-H2dplow)*(H2dohigh-H2dpave)*(1-randomDraw2))
+            return H2dprice
+
+        #Calculating CO2 transport and storage costs
+        lowModeHighMode3 = (CO2ave-CO2low)/(CO2high-CO2ave)
+        def priceCO2TS():
+            if randomDraw2 < lowModeHighMode3:
+                CO2ts = CO2low+math.sqrt((CO2ave-CO2low)*(CO2high-CO2low)*randomDraw2)
+            else:
+                CO2ts = CO2high-math.sqrt((CO2high-CO2low)*(CO2high-CO2ave)*(1-randomDraw2))
+            return CO2ts
+        
+        #Calculating natural gas prices
+        result = [];
+        for i in range(1000):
+            result.append(random.choices(ngprices, weights=None, cum_weights=None, k = 25))
+        samplemean = [];
+        for i in result:
+            samplemean.append(np.mean(i))
+        totalmean = [];
+        totalmean.append(np.mean(samplemean))
+        totalst = []
+        totalst.append(np.std(samplemean))
+        ngprice = norm.ppf(random.uniform(0,1), totalmean, totalst)
+
+        #Calculating CO2 price
+        result2 = []
+        for i in range(111):
+            result2.append(drift+(norm.ppf(random.uniform(0,1), 0, 1))*volatility)
+        CO2tradeprices = []
+        CO2tradeprices.append(CO2captradeprice)
+        for i, v in enumerate(result2):
+            CO2tradeprices.append(CO2tradeprices[i]*(1+result2[i]))
+        result3 = [] #array used to get average price from 4 values from each year
+        for i in range(11, 111):
+            result3.append(CO2tradeprices[i])
+        for i in range(0, th):
+            CO2prices[i] = np.mean(result3[i:i+interval])
+
+        #Demand projection
         realisedDemandyr0 = (1-volyr0)*(demandyr0)+2*demandyr0*volyr0*random.uniform(0,1)
         stoM = (1-volM)*MDemLimit+2*volM*MDemLimit*random.uniform(0,1) 
         stoa = stoM/realisedDemandyr0-1
@@ -179,19 +211,7 @@ def test(help):
         demandSF = realisedDemand[1:th+1]
         demandSF.index = demandSF.index - 1
 
-        # availableRate = []
-        # expansionChange = df.iloc[2:27, 8].array
-
         #Available Rate
-
-        # availableRate.append(iniProdRateYear)
-        # for i, v in enumerate(demandSF):
-        #     if expansionChange[i] == 1 and availableRate[i] < (iniProdRateYear+(expansionTimes*expansionIncrement)):
-        #         availableRate.append(expansionIncrement + availableRate[i])
-        #     elif expansionChange[i] == 0:
-        #         availableRate.append(availableRate[i])
-        # availableRate.pop()
-
         for i in range(0, th):
             availableRate[0] = (iniProdRateDay*plantOperationalCap*365/1000)
             if expansionChange[i] == 1 and availableRate[i] < ((iniProdRateDay*plantOperationalCap*365/1000)+((((dailycapreq*plantOperationalCap*365/1000)-(iniProdRateDay*plantOperationalCap*365/1000))/((iniProdRateDay*plantOperationalCap*365)/1000))*((iniProdRateDay*plantOperationalCap*365)/1000))):
@@ -201,15 +221,6 @@ def test(help):
         availableRate2 = availableRate[0:25]
 
         #Final production rate
-
-        # finalprodrate = []
-
-        # for i, v in enumerate(demandSF):
-        #     if expansionChange[i-1] == 1:
-        #         finalprodrate.append(min(demandSF[i], availableRate[i])*(1-reductionDuringExpansion))
-        #     elif expansionChange[i-1] == 0:
-        #         finalprodrate.append(min(demandSF[i], availableRate[i]))
-
         for i in range(0,th):
             if expansionChange[i-1] == 1:
                 finalprodrate[i] = min(demandSF[i], availableRate2[i])*(1-reductionDuringExpansion)
@@ -217,91 +228,16 @@ def test(help):
                 finalprodrate[i] = min(demandSF[i], availableRate2[i])
 
         #Production of CO2 emission, CO2 capture, Upstream and Distribution of CO2 emissions
-
-        # ProdCO2emissions = [];
-        # CO2capture = []
-        # upstreamCO2emissions = [];
-
-        # for j in finalprodrate:
-        #     ems = CO2emissionRate*(j*1000)/1000
-        #     capture = CO2captureRate*(j*1000)/1000
-        #     upstream = (CO2emissionRatefeedstock/1000)*(NatGasConsumption*8760)*(j/(plantDesignCapBase*plantOperationalCap*365/1000))
-        #     ProdCO2emissions.append(ems)
-        #     CO2capture.append(capture)
-        #     upstreamCO2emissions.append(upstream)
-
         for i in range(0, th):
             ProdCO2emissions[i] = CO2emissionRate*(finalprodrate[i]*thou)/thou
             CO2capture[i] = CO2captureRate*(finalprodrate[i]*thou)/thou
             upstreamCO2emissions[i] = (CO2emissionRatefeedstock/thou)*(NatGasConsumption*cons1)*(finalprodrate[i]/(plantDesignCap*plantOperationalCap*daysyear/thou))
 
-        #Necessary functions
-
-        lowModeHighMode = (Hpriceave-Hpricelow)/(Hpricehigh-Hpricelow)
-        randomDraw2 = random.uniform(0, 1)
-        def findHprice():
-            if randomDraw2 < lowModeHighMode:
-                Hprice = Hpricelow+math.sqrt((Hpriceave-Hpricelow)*(Hpricehigh-Hpricelow)*randomDraw2)
-            else:
-                Hprice = Hpricehigh-math.sqrt((Hpricehigh-Hpricelow)*(Hpricehigh-Hpriceave)*(1-randomDraw2))
-            return Hprice 
-
-        lowModeHighMode2 = (H2dpave-H2dplow)/(H2dohigh-H2dpave)
-        def findH2deliveryprice():
-            if randomDraw2 < lowModeHighMode2:
-                H2dprice = H2dplow+math.sqrt((H2dpave-H2dplow)*(H2dohigh-H2dplow)*randomDraw2)
-            else: 
-                H2dprice = H2dohigh-math.sqrt((H2dohigh-H2dplow)*(H2dohigh-H2dpave)*(1-randomDraw2))
-            return H2dprice
-
-        lowModeHighMode3 = (CO2ave-CO2low)/(CO2high-CO2ave)
-        def priceCO2TS():
-            if randomDraw2 < lowModeHighMode3:
-                CO2ts = CO2low+math.sqrt((CO2ave-CO2low)*(CO2high-CO2low)*randomDraw2)
-            else:
-                CO2ts = CO2high-math.sqrt((CO2high-CO2low)*(CO2high-CO2ave)*(1-randomDraw2))
-            return CO2ts
-
-        # ngprices = df.iloc[1:26, 12].array 
-        result = [];
-
-        for i in range(1000): #1000
-            result.append(random.choices(ngprices, weights=None, cum_weights=None, k = 25)) #k=25
-
-        samplemean = [];
-
-        for i in result:
-            samplemean.append(np.mean(i))
-
-        totalmean = [];
-        totalmean.append(np.mean(samplemean))
-
-        totalst = []
-        totalst.append(np.std(samplemean))
-
-        ngprice = norm.ppf(random.uniform(0,1), totalmean, totalst)
-
         #Revenues
-
-        # rev = []
-
-        # for j in finalprodrate:
-        #     rev.append(findHprice()*(j*1000)/1000000);
-
         for i in range(0,th):
             revenue[i] = findHprice()*(finalprodrate[i]*thou)/mill
 
         #Expansion Investment (linked to capital investment)
-
-        # expansionInvestment = []
-        # expansionInvestment.append(0)
-        # for i, v in enumerate(availableRate):
-        #     if expansionChange[i] == 1:
-        #         expansionInvestment.append(dict2[v])
-        #     elif expansionChange[i] == 0:
-        #         expansionInvestment.append(0)
-        # expansionInvestment.pop()
-
         for i in range(0,th):
             expansionInvestment[0] = 0
             if expansionChange[i-1] == 1:
@@ -309,15 +245,8 @@ def test(help):
             elif expansionChange[i-1] == 0:
                 expansionInvestment[i] = 0
 
-        # Fixed OPEX
-
-        # fixedOPEX = []; #Fixed OPEX
-
-        # for i in availableRate:
-        #     fixedOPEX.append(dict[i])
-        # for i in range(0,th):
-        #     fixedOPEX[i] = dict[availableRate2[i]]
-
+        #Total operational expenditure
+        #Fixed OPEX
         for i in range(0,th):
             if availableRate2[i] >= 0 and availableRate2[i] <= 16470.63:
                 fixedOPEX[i] = dict[16470.63]
@@ -329,15 +258,8 @@ def test(help):
                 fixedOPEX[i] = dict[65882.52]
             elif availableRate2[i] > 65882.52:
                 fixedOPEX[i] = dict[65882.52]
+
         #Variable OPEX
-
-        # NG = [];
-        # WM = [];
-        # CC = [];
-        # CO2tax = [];
-        # CO2TS = [];
-        # H2delivery = [];
-
         NG = pd.Series(index=nums, dtype='float64')
         WM = pd.Series(index=nums, dtype='float64')
         CC = pd.Series(index=nums, dtype='float64')
@@ -353,84 +275,23 @@ def test(help):
             CC[i] = basecostCC*(finalprodrate[i]/(plantDesignCapBase*plantOperationalCap*daysyear/thou))/mill
             H2delivery[i] = findH2deliveryprice()*(finalprodrate[i]*thou)/mill
 
-        # for j in finalprodrate:
-        #     NG.append((NatGasConsumption*workingHours)/1000*ngprice[0]*(j/(plantDesignCapScaled*plantOperationalCap*365/1000))/1000000);
-        #     WM.append(basecostWM*(j/(plantDesignCapBase*plantOperationalCap*365/1000))/1000000);
-        #     CC.append(basecostCC*(j/(plantDesignCapBase*plantOperationalCap*365/1000))/1000000);
-        #     H2delivery.append(findH2deliveryprice()*(j*1000)/1000000)
-
-        #finding CO2 price
-        result2 = []
-        for i in range(111): #108
-            result2.append(drift+(norm.ppf(random.uniform(0,1), 0, 1))*volatility)
-
-        CO2tradeprices = []
-        CO2tradeprices.append(CO2captradeprice)
-        for i, v in enumerate(result2):
-            CO2tradeprices.append(CO2tradeprices[i]*(1+result2[i]))
-
-        result3 = [] #array used to get average price from 4 values from each year
-        for i in range(11, 111):
-            result3.append(CO2tradeprices[i])
-
-        for i in range(0, th):
-            CO2prices[i] = np.mean(result3[i:i+interval])
-
         for i in range(0,th):
             CO2tax[i] = CO2prices[i]*ProdCO2emissions[i]/mill
             CO2TS[i] = priceCO2TS()*CO2capture[i]/mill
-        # for k in ProdCO2emissions:
-        #     CO2tax.append(CO2price*k/1000000)
-
-        # for l in CO2capture:
-        #     CO2TS.append(priceCO2TS()*l/1000000)
 
         temp1 = np.add(NG, WM);
         temp2 = np.add(CC, CO2tax)
         temp3 = np.add(CO2TS, H2delivery)
         temp4 = np.add(temp1, temp2)
-
         varOPEXcost = np.add(temp4, temp3)
-
-        OpCost = np.add(fixedOPEX, varOPEXcost); #total operational costs
+        OpCost = np.add(fixedOPEX, varOPEXcost); #Total operational costs
 
         #Depreciation
-
-        # MACRSphased = (df.iloc[2:27, 10]).array
-        # Depreciation = MACRSphased*(statetax+fedtax);
         for i in range(0, th):
             Depreciation[i] = MACRSphased[i]*(statetax+fedtax);
 
-        # sv = sum(expansionInvestment)+initialCapCostsPhased - sum(Depreciation)
-
-        # decom = []
-        # for i in range(24):
-        #     decom.append(0)
-        # decom.append(sv)
-
-        sv = initialCapCostsPhased + sum(expansionInvestment) - sum(Depreciation)
-
-        decom = pd.Series(index=nums, dtype='float64')
-        for i in range(0, th):
-            if i <=24:
-                decom[i] = 0
-            else:
-                decom[i] = sv
-
         #45Q tax credit
-
-        # q = df.iloc[2:27, 2].array #tax credit data from csv file
-        # tc = [] #45Q tax credit
-
-        # for i, m in enumerate(CO2capture):
-        #     if m >= 100000:
-        #         tc.append(q[i] * m / 1000000)
-        #         #
-        #     else:
-        #         tc.append(0)
-
         tc = pd.Series(index=nums, dtype='float64')
-
         for i in range(0, th):
             if CO2capture[i] >= 100000:
                 tc[i] = q[i] * CO2capture[i]/mill
@@ -438,44 +299,21 @@ def test(help):
                 tc[i] = 0
                 
         #Cashflow
-
-        # cf = (rev-OpCost)*(1-statetax-fedtax)+Depreciation+tc #Final Cashflow 
-
-        # #Discounted Cashflow
-        # nomyear = df.iloc[2:27, 4].array #Nominal Year Counts
-
-        # dcf = (cf-expansionInvestment)/(1+discountrate)**nomyear #Final Discounted Cashflow 
-
-        # #npv
-
-        # npv = sum(dcf)-initialCapCostsPhased #Final Net Present Value
-
         for i in range(0, th):
             cf[i] = (revenue[i]-OpCost[i])*(1-statetax-fedtax)+Depreciation[i]+tc[i]
             dcf[i] = (cf[i] - expansionInvestment[i])/(1+discountrate)**nomyear[i]
             npv1 += dcf[i]
             npv = npv1 - initialCapCostsPhased
         print(npv)
-        return npv
+        return -npv
     
     counter = 0
     for i in range(0, 2000):   #2000 runs
         counter += npv()
     enpv = counter/2000        #2000 runs
-        
-    return enpv
-    
-# print(f"npv of investment is {npv}");
+    return -enpv
 
-# print(f'final enpv value is {test([47500, 0.5])}')
-print(f'final enpv value is {test([49776.1747, 0.0158])}') #sensitivity analysis base case
-
-# plotting graphs
-# year2 = df.iloc[1:26, 0];
-# plt.plot(year2, demandSF, label='demand')
-# plt.plot(year2, finalprodrate, label='H2 production rate')
-# plt.legend()
-# plt.title('Centralised Phased Uncertainty Case Deployment Schedule')
-# plt.show()
+print(f'ENPV value: {main([47500, 0.5])}') #Use this to optimise ENPV
+# print(f'final enpv value is {enpv([49776.1747, 0.0158])}') #Use this for sensitivity analysis
 
 

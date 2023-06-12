@@ -1,9 +1,6 @@
 import random
-# import math
-import matplotlib.pyplot as plt
-# import numpy as np
-# from multiprocessing import Pool
 
+#Imported cases
 from centralised.centralFixed import *
 # from centralised.centralPhased import *
 # from centralised.centralFlexible import *
@@ -17,23 +14,19 @@ from centralised.centralFixed import *
 # from decentralised.decentralFixedUncertain import *
 # from decentralised.decentralPhasedUncertain import *
 # from decentralised.decentralFlexibleUncertain import *
+
+#Bounds for design variables
+bounds = [(100000, 200000)]                                                             #centralised Fixed Certain and Uncertain
+# bounds = [(30000, 50000), (0, 1)]                                                     #centralised Phased Certain and Uncertain
+# bounds = [(30000, 50000), (0, 1), (0, 1)]                                             #centralised Flexible Certain and Uncertain
+
+# bounds = [(100, 600)]                                                                 #decentralised Fixed Certain and Uncertain
+# bounds = [(100, 600), (0, 50), (0, 1)]                                                #decentralised Phased Certain and Uncertain
+# bounds = [(100, 600), (0, 50), (0, 1), (0, 5), (0, 1)]                                #decentralised Flexible Certain and Uncertain
+
 # ------------------------------------------------------------------------------
 # TO CUSTOMIZE THIS PSO CODE TO SOLVE UNCONSTRAINED OPTIMIZATION PROBLEMS, CHANGE THE PARAMETERS IN THIS SECTION ONLY:
 # THE FOLLOWING PARAMETERS MUST BE CHANGED.
-# def objective_function(X):
-#     A = 10
-#     y = A*2 + sum([(x**2 - A * np.cos(2 * math.pi * x)) for x in X])
-#     return y
-# def task():
-bounds = [(100000, 200000)]                                                #centralised Fixed Certain and Uncertain
-# bounds = [(30000, 50000), (0, 1)]                                         #centralised Phased Certain and Uncertain
-# bounds = [(30000, 50000), (0, 1), (0, 1)]                              #centralised Flexible Certain and Uncertain
-
-# bounds = [(100, 600)]                                                #decentralised Fixed Certain and Uncertain
-# bounds = [(100, 600), (0, 50), (0, 1)]                                     #decentralised Phased Certain and Uncertain
-# bounds = [(100, 600), (0, 50), (0, 1), (0, 5), (0, 1)]                            #decentralised Flexible Certain and Uncertain
-
-
 nv = 1  # number of variables
 mm = -1  # if minimization problem, mm = -1; if maximization problem, mm = 1
 
@@ -45,10 +38,6 @@ c1 = 1  # cognative constant
 c2 = 2  # social constant
 # END OF THE CUSTOMIZATION SECTION
 # ------------------------------------------------------------------------------
-# Visualization
-# fig = plt.figure()
-# ax = fig.add_subplot()
-# fig.show()
 
 class Particle:
     def __init__(self, bounds):
@@ -111,7 +100,7 @@ A = []
 
 for i in range(iterations):
     for j in range(particle_size):
-        swarm_particle[j].evaluate(test)
+        swarm_particle[j].evaluate(main)
 
         if mm == -1:
             if swarm_particle[j].fitness_particle_position < fitness_global_best_particle_position:
@@ -129,24 +118,5 @@ for i in range(iterations):
 
     A.append(fitness_global_best_particle_position)
 
-    # ax.plot(A, color='r')
-    # fig.canvas.draw()
-    # ax.set_xlim(left=max(0, i - iterations), right=i+3)
-
-# plt.show()
 print("The best solution is: ", global_best_particle_position)
-    # return fitness_global_best_particle_position
 print("The best fitness for the best solution is: ", fitness_global_best_particle_position)
-
-
-# protect the entry point
-# if __name__ == '__main__':
-#     # report a message
-#     print('Starting task...')
-#     # create the process pool
-#     with Pool(10) as pool:
-#         # perform calculations
-#         # results = pool.map(test, range(iterations))
-#         results = pool.map(task, )
-#     # report a message
-#     print('Done.')

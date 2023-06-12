@@ -1,6 +1,4 @@
 import matplotlib.pyplot as plt
-# import numpy as np
-import pandas as pd
 
 #Basic
 cenDet= [879.4503, 957.2670, 989.3178] #Unopti
@@ -18,11 +16,6 @@ decenUnOpt = [761.7617, 851.1134, 1135.6080] #Opti
 #Volatility changes
 
 #Discount Rate change
-
-# cenDetvof = pd.Series(index=cenDet, dtype='float64').array
-# cenUnvof = pd.Series(index=cenDet, dtype='float64').array
-# decenDetvof = pd.Series(index=cenDet, dtype='float64').array
-# decenUnvof = pd.Series(index=cenDet, dtype='float64').array
 
 def calc(args):
     a = args[1] - args[0]
@@ -43,6 +36,7 @@ decenUnvof = calc(decenUnOpt)
 
 title = ['Phased - Fixed', 'Flexible - Fixed', 'Flexible - Phased']
 width = 0.6
+
 # plt.bar(title, cenDetvof, label='VoF values', width=width)
 # plt.title('Centralised Deterministic VoF')
 
@@ -54,6 +48,7 @@ width = 0.6
 
 plt.bar(title, decenUnvof, label='VoF values', width=width)
 plt.title('Decentralised Uncertain VoF')
+
 plt.ylabel('VoF')
 plt.legend()
 plt.show()

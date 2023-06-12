@@ -1,4 +1,3 @@
-import numpy as np
 import matplotlib.pyplot as plt
 
 #bar graphs
@@ -111,32 +110,3 @@ plt.show()
 # plt.title('Decentralised ENPV Values - Uncertain')
 # plt.legend()
 # plt.show()
-
-
-
-
-
-
-
-
-# plt.bar(title, b, label='Optimised', width=width)
-# plt.bar(title, a, label='Unoptimised', width=width)
-
-# plt.bar(title, b, width=width)
-# plt.bar(title, a, width=width)
-# plt.ylabel('NPV')
-# plt.title('Centralised NPV Values - Certain')
-# # plt.legend()
-
-# plt.plot(title, a, color="blue", markerfacecolor="purple", linewidth=3, marker="o", markersize="10", label="Unoptimised")
-# plt.plot(title, b, color="red", markerfacecolor="orange", linewidth=3, marker="o", markersize="10", label="Optimised")
-# plt.ylabel('NPV')
-# plt.title('Centralised NPV Values - Certain')
-# plt.legend()
-
-# plt.show()
-
-# vof1 = []
-
-# for i, v in enumerate(a):
-#     vof1[i] = b[i] - a[i]
